@@ -1,0 +1,35 @@
+version: '2'
+services:
+  fabrotec:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./src:/app/src
+    env_file: ./.env
+    ports:
+      - '4003:4003'
+    depends_on:
+      - localserv
+      - dbpostgres
+
+  dbpostgres:
+    image: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data:rw
+    ports:
+      - '6543:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: fabrotec
+
+  localserv:
+      build: ./
+      ports:
+        - 80:80
+        - 443:443
+
+volumes:
+  pgdata:
+    driver: local
