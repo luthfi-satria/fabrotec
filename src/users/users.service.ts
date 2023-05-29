@@ -25,10 +25,11 @@ export class UserService {
   }
 
   async createNewAdminUser(data: CreateUsersDto) {
+    console.log(data);
     const isExists = await this.usersRepo.findOne({
       where: { email: data.email },
     });
-    console.log(isExists);
+
     if (isExists) {
       throw new ConflictException(
         this.responseService.error(
@@ -46,6 +47,7 @@ export class UserService {
     const isPhoneExists = await this.usersRepo.findOne({
       where: { phone: data.phone },
     });
+    console.log(isPhoneExists);
     if (isPhoneExists) {
       throw new ConflictException(
         this.responseService.error(
@@ -61,6 +63,7 @@ export class UserService {
     }
 
     const token = randomUUID();
+    console.log(randomUUID);
     try {
       const newAdmin = new UsersDocument({
         ...data,
@@ -96,5 +99,13 @@ export class UserService {
     const salt = genSaltSync(defaultSalt);
 
     return hash(password, salt);
+  }
+
+  async submitScores(payload) {
+    return;
+  }
+
+  async viewBoard(payload) {
+    return;
   }
 }

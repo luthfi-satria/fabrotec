@@ -2,7 +2,6 @@ import {
   IsEmail,
   IsNotEmpty,
   IsNumberString,
-  IsOptional,
   IsString,
   Length,
   ValidateIf,
@@ -13,7 +12,7 @@ export class CreateUsersDto {
   @IsNotEmpty()
   name: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   @ValidateIf((o) => o.email !== '')
   @IsEmail()
