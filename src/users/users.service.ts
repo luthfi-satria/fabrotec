@@ -11,12 +11,15 @@ import { CreateUsersDto } from './dto/users.dto';
 import { ResponseService } from 'src/response/response.service';
 import { genSaltSync, hash } from 'bcrypt';
 import { randomUUID } from 'crypto';
+import { LeaderboardDocument } from 'src/database/entities/leaderboard.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UsersDocument)
     private readonly usersRepo: Repository<UsersDocument>,
+    @InjectRepository(LeaderboardDocument)
+    private readonly leaderboardRepo: Repository<LeaderboardDocument>,
     private readonly responseService: ResponseService,
   ) {}
 
@@ -105,7 +108,12 @@ export class UserService {
     return;
   }
 
-  async viewBoard(payload) {
-    return;
+  async viewBoard() {
+    const result = await this.leaderboardRepo
+      .createQueryBuilder()
+      .limit(10)
+      .getMany();
+    console.log(result);
+    return this.responseService.success(true, 'Displaying leaderboard', result);
   }
 }
