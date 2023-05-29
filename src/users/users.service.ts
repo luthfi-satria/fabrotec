@@ -25,46 +25,46 @@ export class UserService {
   }
 
   async createNewAdminUser(data: CreateUsersDto) {
-    console.log(data);
-    const isExists = await this.usersRepo.findOne({
-      where: { email: data.email },
-    });
-
-    if (isExists) {
-      throw new ConflictException(
-        this.responseService.error(
-          HttpStatus.CONFLICT,
-          {
-            value: data.email,
-            property: 'email',
-            constraint: ['email already registered!'],
-          },
-          'User Already Exists',
-        ),
-      );
-    }
-
-    const isPhoneExists = await this.usersRepo.findOne({
-      where: { phone: data.phone },
-    });
-    console.log(isPhoneExists);
-    if (isPhoneExists) {
-      throw new ConflictException(
-        this.responseService.error(
-          HttpStatus.CONFLICT,
-          {
-            value: data.phone,
-            property: 'phone',
-            constraint: ['Phone number already registered!'],
-          },
-          'User Already Exists',
-        ),
-      );
-    }
-
-    const token = randomUUID();
-    console.log(randomUUID);
     try {
+      console.log(data);
+      const isExists = await this.usersRepo
+        .createQueryBuilder()
+        .where('email = :email', { email: data.email })
+        .getOne();
+      console.log(isExists);
+      if (isExists) {
+        throw new ConflictException(
+          this.responseService.error(
+            HttpStatus.CONFLICT,
+            {
+              value: data.email,
+              property: 'email',
+              constraint: ['email already registered!'],
+            },
+            'User Already Exists',
+          ),
+        );
+      }
+
+      const isPhoneExists = await this.usersRepo.findOne({
+        where: { phone: data.phone },
+      });
+      console.log(isPhoneExists);
+      if (isPhoneExists) {
+        throw new ConflictException(
+          this.responseService.error(
+            HttpStatus.CONFLICT,
+            {
+              value: data.phone,
+              property: 'phone',
+              constraint: ['Phone number already registered!'],
+            },
+            'User Already Exists',
+          ),
+        );
+      }
+
+      const token = randomUUID();
       const newAdmin = new UsersDocument({
         ...data,
         role_name: UserRole.Admin,

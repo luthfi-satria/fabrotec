@@ -5,11 +5,12 @@ import { UserService } from './users.service';
 import { UsersDocument } from 'src/database/entities/users.entity';
 import { ResponseService } from 'src/response/response.service';
 import { MessageService } from 'src/message/message.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [TypeOrmModule.forFeature([UsersDocument])],
   exports: [UserService],
-  providers: [UserService, ResponseService, MessageService],
+  providers: [UserService, ResponseService, MessageService, JwtService],
   controllers: [UsersController],
 })
 export class UsersModule {}

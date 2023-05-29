@@ -33,6 +33,9 @@ export class UsersDocument {
   @Column({ type: 'varchar', nullable: false })
   email?: string;
 
+  @Column({ type: 'varchar', nullable: false })
+  phone?: string;
+
   @Column()
   password?: string;
 
