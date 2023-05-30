@@ -1,7 +1,7 @@
-import { BadRequestException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import { compare } from 'bcrypt';
-import { MessageService } from 'src/message/message.service';
+import { UserType } from 'src/hash/guard/interface/user.interface';
+import { HashService } from 'src/hash/hash.service';
 import { RMessage } from 'src/response/response.interface';
 import { ResponseService } from 'src/response/response.service';
 import { UserService } from 'src/users/users.service';
@@ -9,18 +9,20 @@ import { UserService } from 'src/users/users.service';
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UserService,
-    private jwtService: JwtService,
-    private messageService: MessageService,
-    private responseService: ResponseService,
+    private readonly hashService: HashService,
+    private readonly userService: UserService,
+    private readonly responseService: ResponseService,
   ) {}
 
-  async signIn(username, pass) {
-    const user = await this.usersService.findOne(username);
-    const validate: boolean = await this.validatePassword(pass, user.password);
+  async createAccessToken(username, password): Promise<string> {
+    const user = await this.userService.findOne(username);
+    const validate: boolean = await this.validatePassword(
+      password,
+      user.password,
+    );
     if (!validate) {
       const errors: RMessage = {
-        value: pass,
+        value: password,
         property: 'password',
         constraint: ['Invalid user accounts'],
       };
@@ -33,15 +35,21 @@ export class AuthService {
       );
     }
 
-    console.log('create token');
     const payload = {
       sub: user.id,
       username: user.username,
-      user_type: user.role_name,
+      user_type: UserType.User,
+      level: user.role_name,
     };
-    return {
-      access_token: await this.jwtService.signAsync(payload),
-    };
+
+    return this.hashService.jwtSign(
+      payload,
+      process.env.AUTH_JWTEXPIRATIONTIME,
+    );
+  }
+
+  async validateAccessToken(token: string): Promise<Record<string, any>> {
+    return this.hashService.jwtPayload(token);
   }
 
   async validatePassword(

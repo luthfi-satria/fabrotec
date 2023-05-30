@@ -3,17 +3,24 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { UsersDocument } from './users.entity';
 
 @Entity({ name: 'leaderboard' })
 export class LeaderboardDocument {
   @PrimaryGeneratedColumn()
   id?: number;
 
-  @Column({ type: 'varchar', nullable: false })
-  player_name?: string;
+  @Column({ nullable: false })
+  user_id: number;
+
+  @ManyToOne(() => UsersDocument, (user) => user.id)
+  @JoinColumn({ name: 'user_id' })
+  user_profile: UsersDocument;
 
   @Column({
     type: 'int4',

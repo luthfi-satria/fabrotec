@@ -3,9 +3,11 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { LeaderboardDocument } from './leaderboard.entity';
 
 export enum UserStatus {
   Waiting_for_approval = 'WAITING_FOR_APPROVAL',
@@ -78,6 +80,12 @@ export class UsersDocument {
 
   @Column({ nullable: true })
   refresh_token: string;
+
+  @OneToMany(() => LeaderboardDocument, (userscore) => userscore.user_id, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  scores: LeaderboardDocument[];
 
   constructor(init?: Partial<UsersDocument>) {
     Object.assign(this, init);
