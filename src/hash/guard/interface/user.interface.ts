@@ -1,10 +1,11 @@
 export enum UserType {
-  User = 'user',
+  Player = 'player',
+  Admin = 'admin',
 }
 
 export enum Level {
-  Player = 'player',
-  Admin = 'admin',
+  free = 'free',
+  member = 'member',
 }
 
 export interface User {

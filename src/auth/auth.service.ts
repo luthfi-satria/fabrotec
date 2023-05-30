@@ -1,6 +1,6 @@
 import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import { compare } from 'bcrypt';
-import { UserType } from 'src/hash/guard/interface/user.interface';
+import { Level } from 'src/hash/guard/interface/user.interface';
 import { HashService } from 'src/hash/hash.service';
 import { RMessage } from 'src/response/response.interface';
 import { ResponseService } from 'src/response/response.service';
@@ -38,8 +38,8 @@ export class AuthService {
     const payload = {
       sub: user.id,
       username: user.username,
-      user_type: UserType.User,
-      level: user.role_name,
+      user_type: user.role_name,
+      level: Level.free,
     };
 
     return this.hashService.jwtSign(

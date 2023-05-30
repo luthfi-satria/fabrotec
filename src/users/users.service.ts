@@ -14,7 +14,8 @@ import { genSaltSync, hash } from 'bcrypt';
 import { randomUUID } from 'crypto';
 import { LeaderboardDocument } from 'src/database/entities/leaderboard.entity';
 import { AddScoreDto } from './dto/scores.dto';
-import { MessageService } from 'src/message/message.service';
+import { AuthJwtGuard } from 'src/auth/auth.decorator';
+import { ResponseStatusCode } from 'src/response/response.decorator';
 
 @Injectable()
 export class UserService {
