@@ -208,14 +208,12 @@ export class UserService {
         .groupBy('user.id')
         .addGroupBy('user.username')
         .orderBy('SUM(board.score)', 'DESC')
-        .limit(10)
-        .getMany();
+        .take(10)
+        .getRawMany();
 
-      return this.responseService.success(
-        true,
-        'Displaying leaderboard',
-        result,
-      );
+      return this.responseService.success(true, 'Displaying leaderboard', {
+        result: result,
+      });
     } catch (err) {
       console.log(err);
       return err;
