@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Request } from '@nestjs/common';
 import { ResponseStatusCode } from 'src/response/response.decorator';
 import { UserService } from './users.service';
 import { CreateUsersDto } from './dto/users.dto';
@@ -16,12 +16,19 @@ export class UsersController {
   }
 
   @Post('register')
+  @UserType('admin', 'player')
+  @AuthJwtGuard()
+  @ResponseStatusCode()
   async register(@Body() payload: CreateUsersDto) {
     return this.userService.createNewPlayer(payload);
   }
 
   @Post('scores')
-  async submitScores(@Body() payload) {
+  @UserType('admin', 'player')
+  @AuthJwtGuard()
+  @ResponseStatusCode()
+  async submitScores(@Body() payload, @Request() request) {
+    console.log(request);
     return this.userService.submitScores(payload);
   }
 

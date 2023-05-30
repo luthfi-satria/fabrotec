@@ -1,9 +1,9 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber } from 'class-validator';
 
 export class AddScoreDto {
   @IsNotEmpty()
-  @IsString()
-  player_name: string;
+  @IsNumber()
+  user_id: number;
 
   @IsNotEmpty()
   @IsNumber()
